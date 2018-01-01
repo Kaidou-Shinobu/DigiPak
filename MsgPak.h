@@ -24,9 +24,10 @@ private:
 	
 	std::vector<MsgFile> files;
 	
-	virtual void populate() override;
+	virtual void populate(std::ifstream& inputFILE) override;
 
 public:
-	MsgPak(std::string& inputPakFilename);
+	MsgPak() {};
 	void exportAsJSON(std::string& jsonFilename);
+	void import(std::string& jsonFilename);
 };

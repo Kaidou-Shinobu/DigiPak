@@ -5,7 +5,7 @@
 
 struct NCGRFile {
 	std::uint32_t fileOffset;
-	std::uint32_t unknown;
+	std::uint32_t sizeUncompressed;
 	std::uint32_t sizeNoFileEndPadding;
 	std::uint32_t sizeWithFileEndPadding;
 	std::uint32_t padding;
@@ -14,9 +14,14 @@ struct NCGRFile {
 
 class NCGRPak : public Pak {
 private:
-	virtual void populate() override;
+	virtual void populate(std::ifstream& inputFILE) override;
 	std::vector<NCGRFile> graphics;
+
+	std::unique_ptr<char[]> decompressPrototype(NCGRFile& compressedFile);
+	
 public:
-	NCGRPak(std::string& inputPakFilename);
+	NCGRPak() {};
+	//std::string& inputPakFilename);
 	void exportFiles();
+	void importFiles(); //ToDo
 };

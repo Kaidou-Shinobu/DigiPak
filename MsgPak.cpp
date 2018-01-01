@@ -1,37 +1,33 @@
 ﻿#include "MsgPak.h"
 
 
-MsgPak::MsgPak(std::string& inputPakFilename) :
-Pak(inputPakFilename)
-{
-	if (inputPAKFILE.is_open()) {
-		populate();
-		inputPAKFILE.close();
-	}
-}
+void MsgPak::populate(std::ifstream& inputFILE) {
 
-void MsgPak::populate() {
+	if (!inputFILE.is_open()) {
+
+	}
+
 	files.resize(header.numOfFiles); //We know a priori the number of files in this PKG.
 
 	//Populate Pointer List
 	for (auto& file : files) {
-		inputPAKFILE.read(reinterpret_cast<char*>(&file.fileOffset), sizeof(file.fileOffset));
-		inputPAKFILE.read(reinterpret_cast<char*>(&file.size1), sizeof(file.size1));
-		inputPAKFILE.read(reinterpret_cast<char*>(&file.size2), sizeof(file.size2));
-		inputPAKFILE.read(reinterpret_cast<char*>(&file.padding), sizeof(file.padding));
+		inputFILE.read(reinterpret_cast<char*>(&file.fileOffset), sizeof(file.fileOffset));
+		inputFILE.read(reinterpret_cast<char*>(&file.size1), sizeof(file.size1));
+		inputFILE.read(reinterpret_cast<char*>(&file.size2), sizeof(file.size2));
+		inputFILE.read(reinterpret_cast<char*>(&file.padding), sizeof(file.padding));
 	}
 	int fileNo = 0;
 	for (auto& file : files) {
 		//Immediately should be 8 bytes of information regarding the number of Messages in the file
 		std::uint32_t endAddr = file.fileOffset + file.size1;
 		std::uint32_t temp;
-		inputPAKFILE.read(reinterpret_cast<char*>(&temp), sizeof(temp));
-		inputPAKFILE.read(reinterpret_cast<char*>(&file.numOfMessages), sizeof(file.numOfMessages));
+		inputFILE.read(reinterpret_cast<char*>(&temp), sizeof(temp));
+		inputFILE.read(reinterpret_cast<char*>(&file.numOfMessages), sizeof(file.numOfMessages));
 
 		file.messages.resize(file.numOfMessages);
 
 		for (auto& message : file.messages) {
-			inputPAKFILE.read(reinterpret_cast<char*>(&message.messageOffset), sizeof(message.messageOffset));
+			inputFILE.read(reinterpret_cast<char*>(&message.messageOffset), sizeof(message.messageOffset));
 		}
 
 		std::vector<std::uint32_t> messageSizes(file.numOfMessages);
@@ -43,17 +39,28 @@ void MsgPak::populate() {
 
 		for (unsigned int i = 0; i < file.numOfMessages; i++) {
 			file.messages[i].data = std::make_unique<char[]>(messageSizes[i] + 1);
-			inputPAKFILE.read(file.messages[i].data.get(), messageSizes[i]);
+			inputFILE.read(file.messages[i].data.get(), messageSizes[i]);
 			file.messages[i].data[messageSizes[i] - 1] = '\0';
 		}
-		outputPAKFILE.close();
 		fileNo++;
 	}
-
+	return;
 }
 
+void MsgPak::import(std::string& jsonFilename) {
+	std::ifstream inputPAKFILE;
+	inputPAKFILE.open(jsonFilename);
+	if (!inputPAKFILE.is_open()) {
+		return;
+	}
+	inputPAKFILE.close();
+
+
+	return;
+}
 
 void MsgPak::exportAsJSON(std::string& jsonFilename) {
+	std::ofstream outputPAKFILE;
 	outputPAKFILE.open(jsonFilename);
 	outputPAKFILE << "{";
 	outputPAKFILE << "\n\t\"numFiles\": " << files.size() << ",";
