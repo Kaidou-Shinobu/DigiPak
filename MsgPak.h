@@ -5,6 +5,7 @@
 
 struct Message {
 	std::uint32_t messageOffset;
+	std::uint32_t size;
 	std::unique_ptr<char[]> data;
 
 };
@@ -29,5 +30,5 @@ private:
 public:
 	MsgPak() {};
 	void exportAsJSON(std::string& jsonFilename);
-	void import(std::string& jsonFilename);
+	virtual void import(std::string& jsonFilename) override;
 };

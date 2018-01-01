@@ -37,7 +37,7 @@ std::shared_ptr<Pak> PakManager::loadPak(std::string pakFilename) {
 	default: pak = std::make_shared<MsgPak>(); break;
 	}*/
 	if (pakFilename.substr(pakFilename.size() - 12, 6) == "MESPAK") {
-
+		pak = std::make_shared<MsgPak>();
 	}
 	else if (pakFilename.substr(pakFilename.size() - 8, 4) == "NCGR") {
 		pak = std::make_shared<NCGRPak>();

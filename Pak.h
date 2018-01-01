@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <vector>
 #include <memory>
+#include <sstream>
 
 
 
@@ -40,4 +41,6 @@ public:
 	void copyHeader(const PakHeader& hdr) {
 		header = hdr;
 	}
+
+	virtual void import(std::string& jsonFilename) {};
 };

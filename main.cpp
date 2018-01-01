@@ -7,23 +7,14 @@
 
 int main() {
 	PakManager mngr;
+	std::string jsonFilename = "data/MESPAK01.json";
+	
 	//std::shared_ptr<Pak> pak = mngr.loadPak("data/MESPAK01.PAK");
-	std::shared_ptr<Pak> pak = mngr.loadPak("data/BG_NCGR.PAK");
-	/*std::string inputPakFilename = "data/BG_NCGR.PAK";
-	MsgPak mainPak(inputPakFilename);
-	std::string jsonFilename = "data/jsonExample.json";
-	mainPak.exportAsJSON(jsonFilename);*/
+	//std::shared_ptr<MsgPak> msgPak = std::dynamic_pointer_cast<MsgPak>(pak);
+	//msgPak->exportAsJSON(jsonFilename);
 
-	/*for (int i = 0; i <= 5; i++) {
-		std::string inputPakFilename = "data/MESPAK0" + std::to_string(i) + ".PAK";
-		MsgPak mainPak(inputPakFilename);
-		std::string jsonFilename = "data/MESPAK0" + std::to_string(i) + ".json";
-		mainPak.exportAsJSON(jsonFilename);
-	}
-	*/
-	/*std::string inputPakFilename = "data/BG_NCGR.PAK";
-	NCGRPak mainPak(inputPakFilename);
-	mainPak.exportFiles();*/
+	//std::shared_ptr<MsgPak> msgPak2 = std::make_shared<MsgPak>();
+	//msgPak2->import(jsonFilename);
 
 	//std::cin.get();
 
