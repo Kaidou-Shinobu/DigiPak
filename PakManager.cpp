@@ -2,6 +2,8 @@
 
 #include "NCGRPak.h"
 #include "NFTRPak.h"
+#include "NCLRPak.h"
+#include "NSCRPak.h"
 #include "MsgPak.h"
 
 
@@ -22,9 +24,6 @@ std::shared_ptr<Pak> PakManager::loadPak(std::string pakFilename) {
 	else {
 		std::cout << "File could not be opened.\n";
 	}
-
-	
-
 	
 	std::shared_ptr<Pak> pak;
 
@@ -44,6 +43,12 @@ std::shared_ptr<Pak> PakManager::loadPak(std::string pakFilename) {
 	}
 	else if (pakFilename.substr(pakFilename.size() - 8, 4) == "NFTR") {
 		pak = std::make_shared<NFTRPak>();
+	}
+	else if (pakFilename.substr(pakFilename.size() - 8, 4) == "NCLR") {
+		pak = std::make_shared<NCLRPak>();
+	}
+	else if (pakFilename.substr(pakFilename.size() - 8, 4) == "NSCR") {
+		pak = std::make_shared<NSCRPak>();
 	}
 	else {
 		std::cout << "Could not find correct PAK format!" << std::endl;

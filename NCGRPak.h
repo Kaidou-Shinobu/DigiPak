@@ -17,7 +17,7 @@ private:
 	virtual void populate(std::ifstream& inputFILE) override;
 	std::vector<NCGRFile> graphics;
 
-	std::unique_ptr<char[]> decompressPrototype(NCGRFile& compressedFile);
+	//std::unique_ptr<char[]> decompressPrototype(NCGRFile& compressedFile);
 	
 public:
 	NCGRPak() {};

@@ -37,7 +37,7 @@ void NCGRPak::populate(std::ifstream& inputFILE) {
 	}
 
 }
-
+/*
 std::unique_ptr<char[]> NCGRPak::decompressPrototype(NCGRFile& compressedFile) {
 	std::unique_ptr<char[]> buffer = std::make_unique<char[]>(compressedFile.sizeUncompressed);
 	std::unique_ptr<char[]> buffer2 = std::make_unique<char[]>(0x1000);
@@ -186,7 +186,7 @@ std::unique_ptr<char[]> NCGRPak::decompressPrototype(NCGRFile& compressedFile) {
 		} while (lr <= r9);
 	}
 	return std::move(buffer);
-}
+}*/
 
 void NCGRPak::exportFiles() {
 	std::ofstream outputPAKFILE;
@@ -194,7 +194,7 @@ void NCGRPak::exportFiles() {
 	//for (unsigned int i = 0; i < 1; i++) {
 		std::string outputNCGRFilename = "data/bg/BG_" + std::to_string(i) + ".ncgr";
 		outputPAKFILE.open(outputNCGRFilename, std::ios::binary);
-		std::unique_ptr<char[]> decompressed = decompressPrototype(graphics[i]);
+		std::unique_ptr<char[]> decompressed = decompressPrototype(graphics[i].data.get(), graphics[i].sizeUncompressed);
 		outputPAKFILE.write(decompressed.get(), graphics[i].sizeUncompressed);
 		outputPAKFILE.close();
 	}

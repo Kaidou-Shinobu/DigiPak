@@ -29,12 +29,12 @@ private:
 protected:
 	PakHeader header;
 	std::string hexToStr(std::uint32_t& data);
-
+	virtual std::unique_ptr<char[]> decompressPrototype(char* compressedBuffer, int uncompressedSize);
 	
 public:
 	Pak() {};
-	virtual ~Pak() = default;
-	virtual void populate(std::ifstream& inputFILE) = 0;
+	virtual ~Pak() {};
+	virtual void populate(std::ifstream& inputFILE) {};
 
 	const PakHeader getHeader() const { return header; };
 

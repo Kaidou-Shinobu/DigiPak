@@ -30,22 +30,16 @@ void MsgPak::populate(std::ifstream& inputFILE) {
 			inputFILE.read(reinterpret_cast<char*>(&message.messageOffset), sizeof(message.messageOffset));
 		}
 
-		//std::vector<std::uint32_t> messageSizes(file.numOfMessages);
-
 		for (unsigned int i = 0; i < file.numOfMessages - 1; i++) {
-			//messageSizes[i] = file.messages[i + 1].messageOffset - file.messages[i].messageOffset;
+
 			file.messages[i].size = file.messages[i + 1].messageOffset - file.messages[i].messageOffset;
 		}
-		//messageSizes[file.numOfMessages - 1] = file.size1 - file.messages[file.numOfMessages - 1].messageOffset;
+
 		file.messages[file.numOfMessages - 1].size = file.size1 - file.messages[file.numOfMessages - 1].messageOffset;
 
 		for (unsigned int i = 0; i < file.numOfMessages; i++) {
-			//file.messages[i].data = std::make_unique<char[]>(messageSizes[i] + 1);
-			//file.messages[i].data = std::make_unique<char[]>(messageSizes[i]);
 			file.messages[i].data = std::make_unique<char[]>(file.messages[i].size);
-			//inputFILE.read(file.messages[i].data.get(), messageSizes[i]);
 			inputFILE.read(file.messages[i].data.get(), file.messages[i].size);
-			//file.messages[i].data[messageSizes[i] - 1] = '\0';
 		}
 		fileNo++;
 	}
