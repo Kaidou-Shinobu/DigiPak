@@ -57,5 +57,7 @@ public:
 
 	void setExtension(std::string ext) { extension = ext; }
 
+	virtual int getNumFiles() { return files.size(); }
+
 	virtual void import(std::string& jsonFilename) {};
 };

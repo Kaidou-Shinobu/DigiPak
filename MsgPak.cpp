@@ -99,6 +99,8 @@ void MsgPak::import(std::string& jsonFilename) {
 			if (vBuffer.size() % 2 != 0) {
 				vBuffer.push_back(static_cast<char>(0x00));
 			}
+			vBuffer.push_back(static_cast<char>(0x00));
+			vBuffer.push_back(static_cast<char>(0x00));
 			msg.size = vBuffer.size();
 			msg.data = std::make_unique<char[]>(vBuffer.size());
 			std::copy(vBuffer.begin(), vBuffer.end(), msg.data.get());
