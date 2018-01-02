@@ -1,5 +1,8 @@
 #include "Pak.h"
 
+Pak::Pak() : extension(".bin"){
+}
+
 std::string Pak::hexToStr(std::uint32_t& data) {
 
 	std::string newString;

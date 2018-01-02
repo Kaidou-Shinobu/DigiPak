@@ -7,17 +7,17 @@ void MsgPak::populate(std::ifstream& inputFILE) {
 
 	}
 
-	files.resize(header.numOfFiles); //We know a priori the number of files in this PKG.
+	messageFiles.resize(header.numOfFiles); //We know a priori the number of files in this PKG.
 
 	//Populate Pointer List
-	for (auto& file : files) {
+	for (auto& file : messageFiles) {
 		inputFILE.read(reinterpret_cast<char*>(&file.fileOffset), sizeof(file.fileOffset));
 		inputFILE.read(reinterpret_cast<char*>(&file.size1), sizeof(file.size1));
 		inputFILE.read(reinterpret_cast<char*>(&file.size2), sizeof(file.size2));
 		inputFILE.read(reinterpret_cast<char*>(&file.padding), sizeof(file.padding));
 	}
 	int fileNo = 0;
-	for (auto& file : files) {
+	for (auto& file : messageFiles) {
 		//Immediately should be 8 bytes of information regarding the number of Messages in the file
 		std::uint32_t endAddr = file.fileOffset + file.size1;
 		std::uint32_t temp;
@@ -51,6 +51,11 @@ void MsgPak::import(std::string& jsonFilename) {
 	std::ifstream inputPAKFILE;
 	std::istringstream iss;
 	inputPAKFILE.open(jsonFilename, std::ifstream::binary);
+	if (!inputPAKFILE.is_open()) {
+		std::cout << "Couldn't find file: " << jsonFilename << "\n";
+		std::cin.get();
+		return;
+	}
 	std::string temp;
 	std::getline(inputPAKFILE, temp); // {
 	std::getline(inputPAKFILE, temp); // Line that has number of files
@@ -62,7 +67,7 @@ void MsgPak::import(std::string& jsonFilename) {
 		std::cout << "No files present\n";
 	}
 	
-	files.reserve(header.numOfFiles);
+	messageFiles.reserve(header.numOfFiles);
 
 	for (unsigned int f = 0; f < header.numOfFiles; f++) {
 		MsgFile file;
@@ -116,7 +121,7 @@ void MsgPak::import(std::string& jsonFilename) {
 		file.size2 = file.size1;
 		file.padding = 0x80000000;
 
-		files.emplace_back(std::move(file));
+		messageFiles.emplace_back(std::move(file));
 	}
 	inputPAKFILE.close();
 
@@ -134,8 +139,8 @@ void MsgPak::import(std::string& jsonFilename) {
 	outputPakFILE.write(reinterpret_cast<char*>(&header.junk2),			sizeof(std::uint32_t));
 
 	std::uint32_t offset = header.numOfFiles * 16 + 16;
-	for (unsigned int f = 0; f < files.size(); f++) {
-		MsgFile& file = files[f];
+	for (unsigned int f = 0; f < messageFiles.size(); f++) {
+		MsgFile& file = messageFiles[f];
 		file.fileOffset = offset;
 		outputPakFILE.write(reinterpret_cast<char*>(&file.fileOffset),	sizeof(std::uint32_t));
 		outputPakFILE.write(reinterpret_cast<char*>(&file.size1),		sizeof(std::uint32_t));
@@ -144,7 +149,7 @@ void MsgPak::import(std::string& jsonFilename) {
 		offset += file.size1 + (file.numOfMessages * 4) + 4 + 4; 
 	}
 	
-	for (auto& file : files) {
+	for (auto& file : messageFiles) {
 		std::uint32_t zeroPadding = 0x00000000;
 		outputPakFILE.write(reinterpret_cast<char*>(&zeroPadding), sizeof(std::uint32_t));
 		outputPakFILE.write(reinterpret_cast<char*>(&file.numOfMessages), sizeof(std::uint32_t));
@@ -172,22 +177,22 @@ void MsgPak::exportAsJSON(std::string& jsonFilename) {
 	std::ofstream outputPAKFILE;
 	outputPAKFILE.open(jsonFilename, std::ios::binary);
 	outputPAKFILE << "{";
-	outputPAKFILE << "\n\t\"numFiles\": " << files.size() << ",";
-	for (unsigned int f = 0; f < files.size(); f++) {
+	outputPAKFILE << "\n\t\"numFiles\": " << messageFiles.size() << ",";
+	for (unsigned int f = 0; f < messageFiles.size(); f++) {
 		outputPAKFILE << "\n\t\"File" + std::to_string(f) + "\": " << "\n\t{";
-		outputPAKFILE << "\n\t\t\"numMessages\": " << files[f].messages.size() << ",";
-		for (unsigned int m = 0; m < files[f].messages.size(); m++) {
+		outputPAKFILE << "\n\t\t\"numMessages\": " << messageFiles[f].messages.size() << ",";
+		for (unsigned int m = 0; m < messageFiles[f].messages.size(); m++) {
 			outputPAKFILE << "\n\t\t\"Msg" + std::to_string(m) + "\": ";
 			outputPAKFILE << "\"";
-			outputPAKFILE.write(files[f].messages[m].data.get(), files[f].messages[m].size);
+			outputPAKFILE.write(messageFiles[f].messages[m].data.get(), messageFiles[f].messages[m].size);
 			outputPAKFILE << "\"";
-			if (m != files[f].messages.size() - 1) {
+			if (m != messageFiles[f].messages.size() - 1) {
 				outputPAKFILE << ",";
 			}
 		}
 
 		outputPAKFILE << "\n\t}";
-		if (f != files.size() - 1) {
+		if (f != messageFiles.size() - 1) {
 			outputPAKFILE << ",";
 		}
 	}

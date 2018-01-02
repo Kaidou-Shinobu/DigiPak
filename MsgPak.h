@@ -23,7 +23,7 @@ struct MsgFile {
 class MsgPak : public Pak {
 private:
 	
-	std::vector<MsgFile> files;
+	std::vector<MsgFile> messageFiles;
 	
 	virtual void populate(std::ifstream& inputFILE) override;
 

@@ -24,15 +24,28 @@ struct PakHeader { //32Byte Header
 	std::uint32_t junk2;
 };
 
+struct NDSFile {
+	std::uint32_t fileOffset;
+	std::uint32_t unCompressedSize;
+	std::uint32_t size;
+	std::uint32_t bCompressed;
+	std::unique_ptr<char[]> data;
+};
+
 class Pak {
 private:
 protected:
 	PakHeader header;
+
+	std::string extension;
+
+	std::vector<NDSFile> files;
+
 	std::string hexToStr(std::uint32_t& data);
 	virtual std::unique_ptr<char[]> decompressPrototype(char* compressedBuffer, int uncompressedSize);
 	
 public:
-	Pak() {};
+	Pak();
 	virtual ~Pak() {};
 	virtual void populate(std::ifstream& inputFILE) {};
 
@@ -41,6 +54,8 @@ public:
 	void copyHeader(const PakHeader& hdr) {
 		header = hdr;
 	}
+
+	void setExtension(std::string ext) { extension = ext; }
 
 	virtual void import(std::string& jsonFilename) {};
 };
