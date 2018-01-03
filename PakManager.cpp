@@ -34,7 +34,7 @@ std::shared_ptr<Pak> PakManager::loadPak(std::string pakFilename) {
 	case NFTRTYPE: pak = std::make_shared<NFTRPak>(); break;
 	default: pak = std::make_shared<MsgPak>(); break;
 	}*/
-	if (pakFilename.substr(pakFilename.size() - 12, 6) == "MESPAK") {
+	if (pakFilename.size() >= 12 && pakFilename.substr(pakFilename.size() - 12, 6) == "MESPAK") {
 		pak = std::make_shared<MsgPak>();
 	}
 	else {

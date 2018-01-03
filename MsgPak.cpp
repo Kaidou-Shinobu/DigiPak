@@ -47,7 +47,7 @@ void MsgPak::populate(std::ifstream& inputFILE) {
 }
 
 //Sloppy Implementation for now
-void MsgPak::import(std::string& jsonFilename) {
+void MsgPak::import(std::string jsonFilename) {
 	std::ifstream inputPAKFILE;
 	std::istringstream iss;
 	inputPAKFILE.open(jsonFilename, std::ifstream::binary);
@@ -175,7 +175,7 @@ void MsgPak::import(std::string& jsonFilename) {
 	return;
 }
 
-void MsgPak::exportAsJSON(std::string& jsonFilename) {
+void MsgPak::exportAsJSON(std::string jsonFilename) {
 	std::ofstream outputPAKFILE;
 	outputPAKFILE.open(jsonFilename, std::ios::binary);
 	outputPAKFILE << "{";

@@ -9,6 +9,8 @@
 #include <vector>
 #include <memory>
 #include <sstream>
+#include <tuple>
+#include <experimental\filesystem>
 
 
 
@@ -59,5 +61,5 @@ public:
 
 	virtual int getNumFiles() { return files.size(); }
 
-	virtual void import(std::string& jsonFilename) {};
+	virtual void import(std::string filename) {};
 };

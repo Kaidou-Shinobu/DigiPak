@@ -9,5 +9,7 @@ private:
 public:
 	GenericPak() {};
 	void exportFile(int f);
-	void exportAll();
+	void exportAll(std::string filename);
+	virtual void import(std::string dir);
+
 };
