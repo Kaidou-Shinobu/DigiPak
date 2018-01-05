@@ -25,10 +25,10 @@ void GenericPak::exportFile(int f) {
 void GenericPak::exportAll(std::string filename) {
 	std::ofstream outputNCLRFILE;
 	std::experimental::filesystem::path thisPath(filename);
-	std::experimental::filesystem::path rootName = thisPath.stem();
-	std::experimental::filesystem::create_directory(rootName);
+	std::experimental::filesystem::path stemName = thisPath.stem();
+	std::experimental::filesystem::create_directory(stemName);
 	for (unsigned int i = 0; i < files.size(); i++) {
-		outputNCLRFILE.open(rootName.string() + "/" + rootName.string() + std::to_string(i) + "." + extension, std::ios::binary);
+		outputNCLRFILE.open(stemName.string() + "/" + stemName.string() + std::to_string(i) + "." + extension, std::ios::binary);
 		if (files[i].bCompressed == 0x00000000) {
 			std::unique_ptr<char[]> uncompressedBuffer = decompressPrototype(files[i].data.get(), files[i].unCompressedSize);
 			outputNCLRFILE.write(uncompressedBuffer.get(), files[i].unCompressedSize);
@@ -45,22 +45,25 @@ void GenericPak::import(std::string dir) {
 	std::string newFilename = dir + ".PAK";
 	
 	std::experimental::filesystem::path tarPath(dir);
-	const 	std::experimental::filesystem::directory_iterator end{};
-
-	//std::vector<std::tuple<std::unique_ptr<char[]>, std::uint32_t>> dataBuffers;
+	const std::experimental::filesystem::directory_iterator end{};
 
 	std::ifstream fileFILE;
+	//The Standard does not guarantee file ordering. Hence we'll make our own.
+	std::vector<std::string> paths;
 	for (std::experimental::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) {
+		paths.emplace_back(dirIter->path().string());
+	}
+	//Pull in the data
+	for (std::experimental::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) { 
 		NDSFile file;
-		fileFILE.open(*dirIter);
+		fileFILE.open(*dirIter, std::ifstream::binary);
 		file.unCompressedSize = std::experimental::filesystem::file_size(*dirIter);
 		file.size = file.unCompressedSize;
 		file.bCompressed = 0x80000000;
 
 		file.data = std::make_unique<char[]>(file.size);
-		fileFILE.read(file.data.get(), static_cast<std::uint32_t>(file.size));
+		fileFILE.read(file.data.get(), file.size);
 		fileFILE.close();
-		//dataBuffers.emplace_back(std::forward_as_tuple<std::unique_ptr<char[], std::uint32_t>>(buffer, fileSize));
 		files.emplace_back(std::move(file));
 	}
 

@@ -175,9 +175,13 @@ void MsgPak::import(std::string jsonFilename) {
 	return;
 }
 
-void MsgPak::exportAsJSON(std::string jsonFilename) {
+void MsgPak::exportAsJSON(std::string filename) {
 	std::ofstream outputPAKFILE;
-	outputPAKFILE.open(jsonFilename, std::ios::binary);
+	std::experimental::filesystem::path thisPath(filename);
+	std::experimental::filesystem::path stemName = thisPath.stem();
+	std::string jsonFilename = stemName.string() + ".json";
+	//outputPAKFILE.open(jsonFilename, std::ios::binary);
+	outputPAKFILE.open(jsonFilename);
 	outputPAKFILE << "{";
 	outputPAKFILE << "\n\t\"numFiles\": " << messageFiles.size() << ",";
 	for (unsigned int f = 0; f < messageFiles.size(); f++) {

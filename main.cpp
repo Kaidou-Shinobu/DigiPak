@@ -7,17 +7,26 @@
 
 int main(int argc, char** argv) {
 	
+	if (argc == 1) {
+		std::cout << "Usage:\n";
+
+		std::cout << "To Export to binary/JSON\n";
+		std::cout << "./DigiPak [/path/to/file.PAK]\n\n";
+
+		std::cout << "To Import to PAK\n";
+		std::cout << "./DigiPak [/dir/to/files/]\n";
+
+		std::cout << "You can also simply just click and drag the file or directory onto the executable.";
+		return 0;
+	}
 
 	if (argc != 2) {
 		std::cerr << "Please specify file.\n";
 		return 1;
 	}
 	std::string filename = argv[1];
+
 	
-	
-	//std::string filename = "BG_NGCR.PAK";
-	//std::string filename = "data/MAP_NSCR.PAK";
-	//std::string filename = "data/MESPAK01.json";
 	std::cout << "Would you like to: (1) UNPAK or (2) PAK?\n";
 	std::string userInput;
 	std::cin >> userInput;
@@ -48,8 +57,6 @@ int main(int argc, char** argv) {
 				gPak->exportAll(filename);
 				std::cout << gPak->getNumFiles() + " files successfully exported\n";
 			}
-			
-			
 		}
 		else { //IMPORT TO PAK
 			std::cout << "Are you importing into a MSG PAK file?: (1) Yes or (2) No\n";
@@ -68,6 +75,6 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
-	std::cout << "Please press a button to continue." << std::endl;
+
 	return 0;
 }
