@@ -1,5 +1,35 @@
 #include "GenericPak.h"
 
+bool alphaNumericSort(const std::string& a, const std::string& b) {
+	//Find the position of the number
+	int aPos = -1;
+	int aPosEnd = a.size() - 4; //Exclude ".bin"
+
+	for (unsigned int p = aPosEnd - 1; p > 0; p--) {
+		if (!isdigit(a[p])) {
+			aPos = p + 1;
+			break;
+		}
+	}
+	int aNum = std::stoi(a.substr(aPos, aPosEnd - aPos));
+	int bPos = -1;
+	int bPosEnd = b.size() - 4; //Exclude ".bin"
+
+	for (unsigned int p = bPosEnd - 1; p > 0; p--) {
+		if (!isdigit(b[p])) {
+			bPos = p + 1;
+			break;
+		}
+	}
+	int bNum = std::stoi(b.substr(bPos, bPosEnd - bPos));
+	if (aNum < bNum) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void GenericPak::populate(std::ifstream& inputFILE) {
 	files.resize(header.numOfFiles); //We know a priori the number of files in this PKG.
 
@@ -48,16 +78,20 @@ void GenericPak::import(std::string dir) {
 	const std::experimental::filesystem::directory_iterator end{};
 
 	std::ifstream fileFILE;
-	//The Standard does not guarantee file ordering. Hence we'll make our own.
+	
 	std::vector<std::string> paths;
 	for (std::experimental::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) {
 		paths.emplace_back(dirIter->path().string());
 	}
+	//File order by alpha + numeric
+	std::sort(paths.begin(), paths.end(), alphaNumericSort);
 	//Pull in the data
-	for (std::experimental::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) { 
+	//for (std::experimental::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) { 
+
+	for(auto& dirFile : paths){
 		NDSFile file;
-		fileFILE.open(*dirIter, std::ifstream::binary);
-		file.unCompressedSize = std::experimental::filesystem::file_size(*dirIter);
+		fileFILE.open(dirFile, std::ifstream::binary);
+		file.unCompressedSize = std::experimental::filesystem::file_size(dirFile);
 		file.size = file.unCompressedSize;
 		file.bCompressed = 0x80000000;
 
@@ -81,6 +115,7 @@ void GenericPak::import(std::string dir) {
 
 	//Create Pointers
 	std::uint32_t offset = header.numOfFiles * 16 + 16;
+
 	for (auto& file : files) {
 		file.fileOffset = offset;
 		outputPAKFILE.write(reinterpret_cast<char*>(&file.fileOffset), sizeof(std::uint32_t));

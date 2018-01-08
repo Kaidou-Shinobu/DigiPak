@@ -25,8 +25,9 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	std::string filename = argv[1];
+	//std::string filename = "SPR_NANR";
 
-	
+	std::cout << "VERSION v0.1.1\n";
 	std::cout << "Would you like to: (1) UNPAK or (2) PAK?\n";
 	std::string userInput;
 	std::cin >> userInput;
@@ -75,6 +76,6 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
-
+	
 	return 0;
 }
