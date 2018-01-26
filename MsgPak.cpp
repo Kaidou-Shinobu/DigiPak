@@ -92,6 +92,13 @@ void MsgPak::import(std::string jsonFilename) {
 			
 			inputPAKFILE.get(c);
 			do {
+				if (c == 0x0d) {
+					if (inputPAKFILE.peek() == 0x0a) {
+						inputPAKFILE.get(c);
+						continue;
+					}
+					
+				}
 				vBuffer.push_back(c);
 				inputPAKFILE.get(c);
 			} while (c != '\"');
@@ -120,6 +127,8 @@ void MsgPak::import(std::string jsonFilename) {
 		for (auto& msg : file.messages) {
 			file.size1 += msg.size;
 		}
+		//Also need to add size info regarding the pointers, padding and numMsgs
+		file.size1 += (file.messages.size() * 4) + 4 + 4;
 		file.size2 = file.size1;
 		file.padding = 0x80000000;
 
@@ -133,25 +142,27 @@ void MsgPak::import(std::string jsonFilename) {
 	header.version = 0x31302e32;
 	header.junk = 0;
 	header.junk2 = 0;
-
+	
+	
 	outputPakFILE.open(outputPakFilename, std::ofstream::binary);
+	//Writing in PAK Header
 	outputPakFILE.write(reinterpret_cast<char*>(&header.numOfFiles),	sizeof(std::uint32_t));
 	outputPakFILE.write(reinterpret_cast<char*>(&header.version),		sizeof(std::uint32_t));
 	outputPakFILE.write(reinterpret_cast<char*>(&header.junk),			sizeof(std::uint32_t));
 	outputPakFILE.write(reinterpret_cast<char*>(&header.junk2),			sizeof(std::uint32_t));
 
 	std::uint32_t offset = header.numOfFiles * 16 + 16;
-	for (unsigned int f = 0; f < messageFiles.size(); f++) {
-		MsgFile& file = messageFiles[f];
+	//Writing in File Pointers
+	for (auto& file : messageFiles) {
 		file.fileOffset = offset;
 		outputPakFILE.write(reinterpret_cast<char*>(&file.fileOffset),	sizeof(std::uint32_t));
 		outputPakFILE.write(reinterpret_cast<char*>(&file.size1),		sizeof(std::uint32_t));
 		outputPakFILE.write(reinterpret_cast<char*>(&file.size2),		sizeof(std::uint32_t));
 		outputPakFILE.write(reinterpret_cast<char*>(&file.padding),		sizeof(std::uint32_t));
-		offset += file.size1 + (file.numOfMessages * 4) + 4 + 4; 
+		offset += file.size1;
 	}
-	
-	for (auto& file : messageFiles) {
+	//Writing in Files
+	for(auto& file : messageFiles) {
 		std::uint32_t zeroPadding = 0x00000000;
 		outputPakFILE.write(reinterpret_cast<char*>(&zeroPadding), sizeof(std::uint32_t));
 		outputPakFILE.write(reinterpret_cast<char*>(&file.numOfMessages), sizeof(std::uint32_t));
@@ -180,8 +191,7 @@ void MsgPak::exportAsJSON(std::string filename) {
 	std::experimental::filesystem::path thisPath(filename);
 	std::experimental::filesystem::path stemName = thisPath.stem();
 	std::string jsonFilename = stemName.string() + ".json";
-	//outputPAKFILE.open(jsonFilename, std::ios::binary);
-	outputPAKFILE.open(jsonFilename);
+	outputPAKFILE.open(jsonFilename, std::ios::binary);
 	outputPAKFILE << "{";
 	outputPAKFILE << "\n\t\"numFiles\": " << messageFiles.size() << ",";
 	for (unsigned int f = 0; f < messageFiles.size(); f++) {
