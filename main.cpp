@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 	std::string filename = argv[1];
 	
 
-	std::cout << "VERSION v0.1.2\n";
+	std::cout << "VERSION v0.1.3a\n";
 	std::cout << "Would you like to: (1) UNPAK or (2) PAK?\n";
 	std::string userInput;
 	std::cin >> userInput;
@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 		PakManager mngr;
 		if (userInput == "1") { //Unpack me
 			std::shared_ptr<Pak> pak = mngr.loadPak(filename);
+			MsgPak* msgPak = dynamic_cast<MsgPak*>(pak.get());
 			if (pak == nullptr) { //EXPORTING FROM PAK
 				std::cout << "Error loading PAK file\n";
 				return 1;
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
 				return 1;
 			}
 			if (userInput == "1") {
-				std::shared_ptr<MsgPak> msgPak = std::dynamic_pointer_cast<MsgPak>(pak);
+				MsgPak* msgPak = dynamic_cast<MsgPak*>(pak.get());
 				msgPak->exportAsJSON(filename);
 			}
 			else {
