@@ -9,7 +9,7 @@ private:
 public:
 	GenericPak() {};
 	void exportFile(int f);
-	void exportAll(std::string filename);
-	virtual void import(std::string dir);
+	void exportAll(std::string& filename);
+	virtual void import(std::string& dir, std::string& pakFilename) override;
 
 };

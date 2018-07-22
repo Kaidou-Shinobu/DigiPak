@@ -10,7 +10,7 @@
 #include <memory>
 #include <sstream>
 #include <tuple>
-#include <experimental\filesystem>
+#include <filesystem>
 
 
 
@@ -57,9 +57,9 @@ public:
 		header = hdr;
 	}
 
-	void setExtension(std::string ext) { extension = ext; }
+	void setExtension(std::string ext) { extension = std::move(ext); }
 
 	virtual int getNumFiles() { return files.size(); }
 
-	virtual void import(std::string filename) {};
+	virtual void import(std::string& inFilename, std::string& outFilename) {};
 };

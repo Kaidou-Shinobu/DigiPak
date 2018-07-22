@@ -31,7 +31,6 @@ void MsgPak::populate(std::ifstream& inputFILE) {
 		}
 
 		for (unsigned int i = 0; i < file.numOfMessages - 1; i++) {
-
 			file.messages[i].size = file.messages[i + 1].messageOffset - file.messages[i].messageOffset;
 		}
 
@@ -47,7 +46,7 @@ void MsgPak::populate(std::ifstream& inputFILE) {
 }
 
 //Sloppy Implementation for now
-void MsgPak::import(std::string jsonFilename) {
+void MsgPak::import(std::string& jsonFilename, std::string& pakFilename) {
 	std::ifstream inputPAKFILE;
 	std::istringstream iss;
 	inputPAKFILE.open(jsonFilename, std::ifstream::binary);
@@ -124,7 +123,7 @@ void MsgPak::import(std::string jsonFilename) {
 		}
 		file.size1 = 0;
 		file.size2 = 0;
-		for (auto& msg : file.messages) {
+		for (const auto& msg : file.messages) {
 			file.size1 += msg.size;
 		}
 		//Also need to add size info regarding the pointers, padding and numMsgs
@@ -137,12 +136,11 @@ void MsgPak::import(std::string jsonFilename) {
 	inputPAKFILE.close();
 
 	std::ofstream outputPakFILE;
-	std::string outputPakFilename = jsonFilename.substr(0, jsonFilename.size() - 4) + "edited.PAK";
+	std::string outputPakFilename = pakFilename;
 
 	header.version = 0x31302e32;
 	header.junk = 0;
 	header.junk2 = 0;
-	
 	
 	outputPakFILE.open(outputPakFilename, std::ofstream::binary);
 	//Writing in PAK Header
@@ -186,10 +184,10 @@ void MsgPak::import(std::string jsonFilename) {
 	return;
 }
 
-void MsgPak::exportAsJSON(std::string filename) {
+void MsgPak::exportAsJSON(std::string& filename) {
 	std::ofstream outputPAKFILE;
-	std::experimental::filesystem::path thisPath(filename);
-	std::experimental::filesystem::path stemName = thisPath.stem();
+	std::filesystem::path thisPath(filename);
+	std::filesystem::path stemName = thisPath.stem();
 	std::string jsonFilename = stemName.string() + ".json";
 	outputPAKFILE.open(jsonFilename, std::ios::binary);
 	outputPAKFILE << "{";

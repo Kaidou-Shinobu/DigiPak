@@ -4,7 +4,7 @@
 #include "GenericPak.h"
 
 
-std::shared_ptr<Pak> PakManager::loadPak(std::string pakFilename) {
+std::shared_ptr<Pak> PakManager::loadPak(std::string& pakFilename) {
 
 	PakHeader header;
 
@@ -32,7 +32,6 @@ std::shared_ptr<Pak> PakManager::loadPak(std::string pakFilename) {
 	else {
 		pak = std::make_unique<GenericPak>();
 		if (pakFilename.size() >= 8) {
-			//pak->setExtension(pakFilename.substr(pakFilename.size() - 8, 4));
 			pak->setExtension("bin");
 		}
 	}

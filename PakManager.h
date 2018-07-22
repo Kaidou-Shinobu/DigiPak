@@ -7,5 +7,5 @@ private:
 	std::ifstream inputPAKFILE;
 public:
 	PakManager() {};
-	std::shared_ptr<Pak> loadPak(std::string pakFilename);
+	std::shared_ptr<Pak> loadPak(std::string& pakFilename);
 };
