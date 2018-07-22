@@ -52,11 +52,11 @@ void GenericPak::exportFile(int f) {
 
 }
 
-void GenericPak::exportAll(std::string filename) {
+void GenericPak::exportAll(std::string& filename) {
 	std::ofstream outputNCLRFILE;
-	std::experimental::filesystem::path thisPath(filename);
-	std::experimental::filesystem::path stemName = thisPath.stem();
-	std::experimental::filesystem::create_directory(stemName);
+	std::filesystem::path thisPath(filename);
+	std::filesystem::path stemName = thisPath.stem();
+	std::filesystem::create_directory(stemName);
 	for (unsigned int i = 0; i < files.size(); i++) {
 		outputNCLRFILE.open(stemName.string() + "/" + stemName.string() + std::to_string(i) + "." + extension, std::ios::binary);
 		if (files[i].bCompressed == 0x00000000) {
@@ -71,27 +71,26 @@ void GenericPak::exportAll(std::string filename) {
 	}
 }
 
-void GenericPak::import(std::string dir) {
+void GenericPak::import(std::string& dir, std::string& outFilename) {
 	std::string newFilename = dir + ".PAK";
 	
-	std::experimental::filesystem::path tarPath(dir);
-	const std::experimental::filesystem::directory_iterator end{};
+	std::filesystem::path tarPath(dir);
+	const std::filesystem::directory_iterator end{};
 
 	std::ifstream fileFILE;
 	
 	std::vector<std::string> paths;
-	for (std::experimental::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) {
+	for (std::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) {
 		paths.emplace_back(dirIter->path().string());
 	}
 	//File order by alpha + numeric
 	std::sort(paths.begin(), paths.end(), alphaNumericSort);
-	//Pull in the data
-	//for (std::experimental::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) { 
+	//Pull in the data 
 
 	for(auto& dirFile : paths){
 		NDSFile file;
 		fileFILE.open(dirFile, std::ifstream::binary);
-		file.unCompressedSize = std::experimental::filesystem::file_size(dirFile);
+		file.unCompressedSize = static_cast<uint32_t>(std::filesystem::file_size(dirFile));
 		file.size = file.unCompressedSize;
 		file.bCompressed = 0x80000000;
 

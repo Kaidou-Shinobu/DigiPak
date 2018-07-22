@@ -29,7 +29,7 @@ private:
 
 public:
 	MsgPak() {};
-	void exportAsJSON(std::string filename);
-	virtual void import(std::string jsonFilename) override;
+	void exportAsJSON(std::string& filename);
+	virtual void import(std::string& jsonFilename, std::string& pakFilename) override;
 	virtual int getNumFiles() override { return messageFiles.size(); }
 };
