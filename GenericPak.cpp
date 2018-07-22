@@ -87,7 +87,7 @@ void GenericPak::import(std::string& dir, std::string& outFilename) {
 	std::sort(paths.begin(), paths.end(), alphaNumericSort);
 	//Pull in the data 
 
-	for(auto& dirFile : paths){
+	for(const auto& dirFile : paths){
 		NDSFile file;
 		fileFILE.open(dirFile, std::ifstream::binary);
 		file.unCompressedSize = static_cast<uint32_t>(std::filesystem::file_size(dirFile));
@@ -124,7 +124,7 @@ void GenericPak::import(std::string& dir, std::string& outFilename) {
 		offset += file.unCompressedSize;
 	}
 	//Dump data
-	for (auto& file : files) {
+	for (const auto& file : files) {
 		outputPAKFILE.write(file.data.get(), file.unCompressedSize);
 	}
 

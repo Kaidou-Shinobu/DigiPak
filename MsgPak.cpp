@@ -31,7 +31,6 @@ void MsgPak::populate(std::ifstream& inputFILE) {
 		}
 
 		for (unsigned int i = 0; i < file.numOfMessages - 1; i++) {
-
 			file.messages[i].size = file.messages[i + 1].messageOffset - file.messages[i].messageOffset;
 		}
 
@@ -124,7 +123,7 @@ void MsgPak::import(std::string& jsonFilename, std::string& pakFilename) {
 		}
 		file.size1 = 0;
 		file.size2 = 0;
-		for (auto& msg : file.messages) {
+		for (const auto& msg : file.messages) {
 			file.size1 += msg.size;
 		}
 		//Also need to add size info regarding the pointers, padding and numMsgs

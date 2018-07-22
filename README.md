@@ -2,11 +2,23 @@
 Pak Editor specialized for the Digimon NDS games
 
 # Usage
-Exporting:
-./DigiPak [/path/to/file.PAK] 
+Command-line arguments:
 
-Import to PAK:
-./DigiPak [/dir/to/files/]
+For making a PAK file:
+For exporting from PAK file:
+
+-i  filename for input.
+-u  unpacking for non-MSG data.
+-um unpacking for MSG data.
+
+For importing data/JSON file into PAK:
+-i  filename for input.
+-p  packing for non-MSG data.
+-pm packing for MSG data.
+
+-------------------
+You may also simply click and drag your json/PAK file onto the executable.
+After that, follow the instructions.
 
 Authors:
 Kaidou (Primary)
