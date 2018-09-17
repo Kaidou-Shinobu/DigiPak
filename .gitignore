@@ -54,3 +54,6 @@ Debug/vc141.idb
 *.pdb
 PakEditorAlpha.vcxproj
 *.filters
+git_remove_from_history.sh
+keep/FONT_NFTR_original_normmatt.PAK
+DigiPak/DigiPAK.exe
