@@ -54,9 +54,9 @@ void GenericPak::exportFile(int f) {
 
 void GenericPak::exportAll(std::string& filename) {
 	std::ofstream outputNCLRFILE;
-	std::filesystem::path thisPath(filename);
-	std::filesystem::path stemName = thisPath.stem();
-	std::filesystem::create_directory(stemName);
+	fs::path thisPath(filename);
+	fs::path stemName = thisPath.stem();
+	fs::create_directory(stemName);
 	for (unsigned int i = 0; i < files.size(); i++) {
 		outputNCLRFILE.open(stemName.string() + "/" + stemName.string() + std::to_string(i) + "." + extension, std::ios::binary);
 		if (files[i].bCompressed == 0x00000000) {
@@ -74,13 +74,13 @@ void GenericPak::exportAll(std::string& filename) {
 void GenericPak::import(std::string& dir, std::string& outFilename) {
 	std::string newFilename = dir + ".PAK";
 	
-	std::filesystem::path tarPath(dir);
-	const std::filesystem::directory_iterator end{};
+	fs::path tarPath(dir);
+	const fs::directory_iterator end{};
 
 	std::ifstream fileFILE;
 	
 	std::vector<std::string> paths;
-	for (std::filesystem::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) {
+	for (fs::directory_iterator dirIter(tarPath); dirIter != end; dirIter++) {
 		paths.emplace_back(dirIter->path().string());
 	}
 	//File order by alpha + numeric
@@ -90,7 +90,7 @@ void GenericPak::import(std::string& dir, std::string& outFilename) {
 	for(const auto& dirFile : paths){
 		NDSFile file;
 		fileFILE.open(dirFile, std::ifstream::binary);
-		file.unCompressedSize = static_cast<uint32_t>(std::filesystem::file_size(dirFile));
+		file.unCompressedSize = static_cast<uint32_t>(fs::file_size(dirFile));
 		file.size = file.unCompressedSize;
 		file.bCompressed = 0x80000000;
 

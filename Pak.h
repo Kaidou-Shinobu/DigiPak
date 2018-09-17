@@ -10,8 +10,15 @@
 #include <memory>
 #include <sstream>
 #include <tuple>
-#include <filesystem>
+#include <algorithm>
 
+#if defined __clang__
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#elif defined __GNUC__ || defined __MSC_VER
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 
 //constexpr std::uint32_t MSGTYPE =	0x01000000;

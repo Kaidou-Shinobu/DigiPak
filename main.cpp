@@ -118,7 +118,7 @@ void ProcessArgs(std::vector<std::pair<std::string, std::string>>& args) {
 			else {
 				std::shared_ptr<GenericPak> gPak = std::dynamic_pointer_cast<GenericPak>(pak);
 				gPak->exportAll(output);
-				std::cout << gPak->getNumFiles() + " files successfully exported\n";
+				std::cout << std::to_string(gPak->getNumFiles()) + " files successfully exported\n";
 			}
 			break;
 		}
@@ -156,14 +156,14 @@ void ProcessManual(std::string& filename) {
 			else {
 				std::shared_ptr<GenericPak> gPak = std::dynamic_pointer_cast<GenericPak>(pak);
 				gPak->exportAll(filename);
-				std::cout << gPak->getNumFiles() + " files successfully exported\n";
+				std::cout << std::to_string(gPak->getNumFiles()) + " files successfully exported\n";
 			}
 		}
 		else { //IMPORT TO PAK
 			std::cout << "Are you importing into a MSG PAK file?: (1) Yes or (2) No\n";
 			std::cin >> userInput;
-			std::filesystem::path thisPath(filename);
-			std::filesystem::path stemName = thisPath.stem();
+			fs::path thisPath(filename);
+			fs::path stemName = thisPath.stem();
 			std::string outFilename = stemName.string() + ".PAK";
 			if (userInput != "1" && userInput != "2") {
 				std::cout << "Not an acceptable input. Program will now close.\n";
