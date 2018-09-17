@@ -32,7 +32,8 @@ before_install:
 before_script:
         - mkdir build
         - cd build
-        - cmake --build .. -- VERBOSE=1
+        - cmake .
+        - cmake --build . -- VERBOSE=1
 
 script:
         - make 
