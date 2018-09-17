@@ -30,8 +30,6 @@ before_install:
     - eval "${MATRIX_EVAL}"
 
 before_script:
-        - mkdir build
-        - cd build
         - cmake .
         - cmake --build . -- VERBOSE=1
 
