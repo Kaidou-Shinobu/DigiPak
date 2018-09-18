@@ -35,4 +35,5 @@ before_script:
         - cmake --build . -- VERBOSE=1
 
 script:
-        - make 
+        - make
+	- ctest 
