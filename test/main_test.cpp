@@ -1,7 +1,12 @@
 #include <iostream>
 
-bool tests(){
-    return true;
+enum class DIGIPAKERRORCODE {
+    DIGIPAKSUCCESS = 0,
+    DIGIPAKFAIL = 1
+};
+
+int tests(){
+    return static_cast<int>(DIGIPAKERRORCODE::DIGIPAKSUCCESS);
 }
 
 int main(){
