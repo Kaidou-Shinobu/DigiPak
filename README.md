@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/Kaidou-Shinobu/DigiPak.svg?branch=master)](https://travis-ci.org/Kaidou-Shinobu/DigiPak)
+[![Build status](https://ci.appveyor.com/api/projects/status/d9gdwe6nj5a26u8i/branch/master?svg=true)](https://ci.appveyor.com/project/Kaidou-Shinobu/digipak/branch/master)
+
 # PakEditorAlpha
 Pak Editor specialized for the Digimon NDS games
 
